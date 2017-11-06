@@ -41,6 +41,7 @@ Table of contents
   - [`api.handle`](#apihandle)
   - [Event: `changed`](#event-changed)
   - [Event: `closed`](#event-closed-1)
+  - [Event Management](#event-management)
 - [Sense utilities API](#sense-utilities-api)
   - [Configuration](#configuration-1)
   - [`SenseUtilities.buildUrl()`](#senseutilitiesbuildurlconfig)
@@ -543,6 +544,76 @@ Example:
 api.on('closed', () => {
   /* do something in your application, perhaps route your user to an overview page */
 });
+```
+[Back to top](#api-documentation)
+
+### Event Management 
+
+The API will clean up any remaining event handlers for you following the 
+`closed` event, which is when the QIX Engine considers an API closed. However, 
+should you need to manage the event handlers directly while the API is still 
+active you have the following methods available to you:
+
+#### `api.emit`
+
+Manually emit an event on an API to trigger all listeners for that event
+
+Example:
+
+```js
+api.emit('changed') // triggers all listeners for the 'changed' event
+```
+
+[Back to top](#api-documentation)
+
+#### `api.listeners`
+
+Get a list of all listeners for an event for this API.
+
+Example:
+
+```js
+// 'Event: changed'
+api.listeners('changed') // returns an array of listener functions set for the 'changed' event
+
+// 'Event: closed'
+api.listeners('closed') // returns an array of listener functions set for the 'closed' event
+
+```
+
+[Back to top](#api-documentation)
+
+#### `api.removeListener`
+
+Remove a listener for an event for this API.
+
+Example: 
+```js
+const handleChangeEvent = (layout) => {
+  /* do something with the new layout */
+} 
+
+// added handleChangeEvent function to 'changed' event
+api.on('changed', handleChangeEvent)
+
+// removed handleChangeEvent function from 'changed' event
+api.removeListener('changed', handleChangeEvent)
+```
+[Back to top](#api-documentation)
+
+#### `api.removeAllListeners`
+
+Remove all listeners from an API for an event
+
+Example:
+
+```js
+// 'Event: changed'
+api.removeAllListeners('changed') // Removes all listeners for the 'changed' event
+
+// 'Event: closed'
+api.removeAllListeners('closed') // Removes all listeners for the 'closed' event
+
 ```
 
 [Back to top](#api-documentation)
